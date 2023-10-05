@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ChatGPT Service Prediction</title>
+    <style>
+      body {
+        background-image: url("https://images.theconversation.com/files/374303/original/file-20201210-18-elk4m.jpg?ixlib=rb-1.1.0&rect=0%2C22%2C7500%2C5591&q=45&auto=format&w=926&fit=clip");
+        background-size: cover;
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center horizontally */
+        min-height: 100vh; /* Ensure the content takes at least the full viewport height */
+      }
+
+      h1 {
+        background-color: #262626;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        margin: 0;
+        width: 100%; /* Make the title span the full width */
+      }
+
+      #container {
+        width: 100%;
+        max-width: 600px;
+        margin-top: 250px; /* Add margin to center-align the content vertically */
+        padding: 60px 20px; /* Adjust padding to move the text box to the center */
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      label {
+        font-size: 18px;
+      }
+
+      textarea {
+        width: 100%;
+        padding: 5px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      input[type="submit"] {
+        background-color: #0f7dc2;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #0a628e;
+      }
+
+      #result {
+        margin-top: 20px;
+        font-size: 20px;
+        text-align: center;
+      }
+
+      /* OpenAI logo */
+      .logo {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 100px;
+        filter: invert(1); /* Invert the logo colors to make it white */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- OpenAI logo -->
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg"
+      alt="OpenAI Logo"
+      class="logo"
+    />
+
+    <h1>ChatGPT Sentiment Prediction</h1>
+    <div id="container">
+      <form id="sentiment-form">
+        <label for="short_description">enter a short description:</label><br />
+        <textarea
+          id="short_description"
+          name="short_description"
+          rows="4"
+          cols="50"
+        ></textarea
+        ><br /><br />
+        <div style="text-align: center">
+          <input type="submit" value="predict sentiment" />
+        </div>
+      </form>
+      <div id="result">
+        <!-- Result will be displayed here -->
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("sentiment-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          var shortDescription =
+            document.getElementById("short_description").value;
+          fetch("/predict/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ short_description: shortDescription }),
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              document.getElementById("result").textContent =
+                "predicted sentiment: " + data;
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              document.getElementById("result").textContent = "Error occurred.";
+            });
+        });
+    </script>
+  </body>
+</html>
